@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<title>leni basic tests</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.js"></script>
+
+<main>
+  <div id="mocha"></div>
+  <div id="host"></div>
+</main>
+
+<script>
+  mocha.setup('bdd');
+</script>
+<script type="module">
+  import basicsApp from './tests/basics/app.js';
+
+  const assert = chai.assert;
+
+  describe('Basics', function(){
+    afterEach(function(){
+      host.innerHTML = '';
+    });
+
+    it('works', async function(){
+      let p = new Promise(resolve => {
+        new MutationObserver(function(){
+          this.disconnect();
+          resolve();
+        }).observe(host, { childList: true })
+      });
+
+      basicsApp();
+
+      await p;
+      assert.equal(host.textContent, 'Hi Matthew!');
+    });
+  });
+</script>
+<script type="module">
+  mocha.run();
+</script>

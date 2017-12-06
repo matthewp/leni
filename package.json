@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.1.2",
     "got": "^8.0.1",
+    "mocha": "^4.0.1",
     "rollup": "^0.52.1"
   }
 }
