@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<main></main>
+
+<input type="text" id="namechange" placeholder="Type name">
+
+<script type="module">
+  import { connect } from '../../leni.js';
+
+  let worker = new Worker('./worker.js');
+
+  let w = connect('app', worker);
+
+  w.addEventListener('state', function(state){
+    let { name } = state;
+    document.querySelector('main').textContent = name;
+  });
+
+  w.post('update', { name: 'Matthew' });
+
+  namechange.addEventListener('keyup', function(ev){
+    let name = ev.target.value;
+    w.post('update', { name });
+  });
+</script>

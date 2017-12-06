@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<main>
+  <div>
+    <span id="count">0</span>
+  </div>
+  <button id="increment">+</button>
+  <button id="decrement">-</button>
+</main>
+
+<script type="module">
+  import { connect } from '../../leni.js';
+
+  let worker = new Worker('./worker.js');
+
+  class App {
+    constructor() {
+      let $ = document.querySelector.bind(document);
+      this.count = $('#count');
+      this.mailbox = connect('app', worker);
+
+      this.mailbox.addEventListener('state', val => {
+        this.count.textContent = val;
+      });
+
+      $('main').addEventListener('click', this);
+    }
+
+    handleEvent(ev) {
+      switch(ev.target.id) {
+        case 'increment':
+          this.mailbox.post('increment');
+          break;
+        case 'decrement':
+          this.mailbox.post('decrement');
+          break;
+      }
+    }
+  }
+
+  new App();
+
+  /*
+  let w = connect('app', worker);
+
+  w.addEventListener('state', function(state){
+    let { name } = state;
+    document.querySelector('main').textContent = name;
+  });
+
+  w.post('update', { name: 'Matthew' });
+
+  namechange.addEventListener('keyup', function(ev){
+    let name = ev.target.value;
+    w.post('update', { name });
+  });
+  */
+</script>
