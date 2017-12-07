@@ -20,11 +20,7 @@
   const assert = chai.assert;
 
   describe('Basics', function(){
-    afterEach(function(){
-      host.innerHTML = '';
-    });
-
-    it('works', async function(){
+    beforeEach(async function(){
       let p = new Promise(resolve => {
         new MutationObserver(function(){
           this.disconnect();
@@ -32,11 +28,32 @@
         }).observe(host, { childList: true })
       });
 
-      basicsApp();
+      this.app = basicsApp();
 
       await p;
+    })
+
+    afterEach(function(){
+      host.innerHTML = '';
+    });
+
+    it('works', async function(){
       assert.equal(host.textContent, 'Hi Matthew!');
     });
+
+    it('Can respond to changes', async function(){
+      let p = new Promise(resolve => {
+        new MutationObserver(function(){
+          this.disconnect();
+          resolve();
+        }).observe(host, { childList: true });
+      });
+
+      this.app.message = 'it changed!';
+
+      await p;
+      assert.equal(host.textContent, 'it changed!');
+    })
   });
 </script>
 <script type="module">
