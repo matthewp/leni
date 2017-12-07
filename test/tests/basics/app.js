@@ -1,8 +1,10 @@
 import { connect } from '../../../leni.js';
 
+let emitter;
+
 export default function(){
   let worker = new Worker('./tests/basics/worker.js');
-  let emitter = connect('app', worker);
+  emitter = connect('app', worker);
 
   emitter.addEventListener('state', function(state) {
     host.textContent = state.message;
@@ -19,4 +21,8 @@ export default function(){
   });
 
   return proxy;
+};
+
+export function disconnect() {
+  emitter.disconnect();
 };

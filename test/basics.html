@@ -15,7 +15,9 @@
   mocha.setup('bdd');
 </script>
 <script type="module">
-  import basicsApp from './tests/basics/app.js';
+  import basicsApp, {
+    disconnect as disconnectBasics
+  } from './tests/basics/app.js';
 
   const assert = chai.assert;
 
@@ -34,6 +36,7 @@
     })
 
     afterEach(function(){
+      disconnectBasics();
       host.innerHTML = '';
     });
 
