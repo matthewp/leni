@@ -23,6 +23,6 @@ export default function(){
   return proxy;
 };
 
-export function disconnect() {
-  emitter.disconnect();
+export function stopListening() {
+  emitter.stopListening();
 };

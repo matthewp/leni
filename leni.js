@@ -6,7 +6,7 @@ const DEL = 2;
 
 let globalId = 0;
 
-let emitterProto = Object.create(null);
+const emitterProto = Object.create(null);
 emitterProto.post = function(type, data){
   this._worker.postMessage({
     spec, type, data,
@@ -36,6 +36,15 @@ emitterProto.disconnect = function(){
     id: this._id
   });
 };
+emitterProto.stopListening = function(){
+  this._all.reset();
+  this.disconnect();
+};
+
+const eAll = Object.create(null);
+eAll.reset = function(){
+  for (let i in this) delete this[i];
+};
 
 function createEmitter(tag, worker, id) {
   let e = Object.create(emitterProto);
@@ -45,7 +54,8 @@ function createEmitter(tag, worker, id) {
   }
   e._id = id;
   e._worker = worker;
-  e._emitter = mitt();
+  e._all = Object.create(eAll);
+  e._emitter = mitt(e._all);
   return e;
 }
 
