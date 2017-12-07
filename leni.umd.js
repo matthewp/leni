@@ -62,16 +62,18 @@ function mitt(all                 ) {
 	};
 }
 
+const spec = '_leni-tag';
+const MSG = 1;
+const DEL = 2;
+
 let globalId = 0;
-let spec = 'lib-tag';
 
 let emitterProto = Object.create(null);
 emitterProto.post = function(type, data){
   this._worker.postMessage({
-    spec: spec,
-    type: type,
-    id: this._id,
-    data: data
+    spec, type, data,
+    stype: MSG,
+    id: this._id
   });
 };
 emitterProto.addEventListener = function(type, cb){
@@ -88,6 +90,13 @@ emitterProto.handleEvent = function(ev){
   if(msg.spec === spec && msg.id === this._id) {
     this.emit(msg.type, msg.data);
   }
+};
+emitterProto.disconnect = function(){
+  this._worker.postMessage({
+    spec,
+    stype: DEL,
+    id: this._id
+  });
 };
 
 function createEmitter(tag, worker, id) {
@@ -114,13 +123,21 @@ function subscribe(tag, cb) {
   self.addEventListener('message', function(ev){
     let msg = ev.data || {};
     if(msg.spec === spec) {
-      let emitter = idMap.get(msg.id);
-      if(!emitter) {
-        emitter = createEmitter(tag, self, msg.id);
-        cb(emitter);
-        idMap.set(msg.id, emitter);
+      switch(msg.stype) {
+        case MSG:
+          let emitter = idMap.get(msg.id);
+          if(!emitter) {
+            emitter = createEmitter(tag, self, msg.id);
+            cb(emitter);
+            idMap.set(msg.id, emitter);
+          }
+          emitter.emit(msg.type, msg.data);
+          break;
+        case DEL:
+          idMap.delete(msg.id);
+          break;
       }
-      emitter.emit(msg.type, msg.data);
+
     }
   });
 }
