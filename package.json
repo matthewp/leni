@@ -6,12 +6,23 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url" : "https://github.com/matthewp/leni.git"
+  },
+  "bugs": {
+    "url" : "https://github.com/matthewp/leni/issues"
+  },
   "files": [
     "leni.js",
     "leni.umd.js"
   ],
   "keywords": [],
-  "author": "Matthew Phillips",
+  "author": {
+    "name": "Matthew Phillips",
+    "email": "matthew@matthewphillips.info",
+    "url": "https://matthewphillips.info"
+  },
   "license": "BSD-2-Clause",
   "devDependencies": {
     "chai": "^4.1.2",

@@ -37,7 +37,7 @@ function onApp(emitter) {
   });
 }
 
-leni.subscribe('app');
+leni.subscribe('app', onApp);
 ```
 
 That's it!
