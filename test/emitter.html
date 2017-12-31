@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<title>leni emitter tests</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.js"></script>
+
+<main>
+  <div id="mocha"></div>
+  <div id="host"></div>
+</main>
+
+<script>
+  mocha.setup('bdd');
+</script>
+<script type="module">
+  import { connect } from '../leni.js';
+
+  const assert = chai.assert;
+
+  describe('Emitter', function(){
+    it('can have multiples emitters in worker', function(done){
+      let emitter = connect('app', new Worker('./tests/emitter/multi.js'));
+
+      let count = 0, timeoutId = null;
+
+      function check() {
+        try {
+          assert.equal(count, 1, 'Returned only once');
+          done();
+        } catch(err) {
+          done(err);
+        }
+      }
+
+      emitter.addEventListener('return', function(){
+        count++;
+        if(!timeoutId) {
+          timeoutId = setTimeout(check, 0);
+        }
+      });
+      emitter.post('app');
+    });
+  });
+</script>
+<script type="module">
+  mocha.run();
+</script>
