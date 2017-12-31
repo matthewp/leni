@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<title>Leni test ground</title>
+
+<script type="module">
+
+  let connection = connect('app', worker);
+
+  let echo = Echo(function(controller){
+
+  });
+
+  connection.controlledBy(echo);
+</script>
