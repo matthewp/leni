@@ -10,7 +10,17 @@ type PostMessageAble = {
 
 export type SubscriptionCallback = (emitter: Emitter) => void;
 
-class Emitter extends EventTarget {
+interface EventListener<T = any> {
+  (evt: CustomEvent<T>): void;
+}
+
+interface EventListenerObject<T = any> {
+  handleEvent(object: CustomEvent<T>): void;
+}
+
+type EventListenerOrEventListenerObject<T> = EventListener<T> | EventListenerObject<T>;
+
+class BaseEmitter extends EventTarget {
   #tag: string;
   #channel: PostMessageAble;
   #id: number;
@@ -58,8 +68,12 @@ class Emitter extends EventTarget {
   }
 }
 
+export type Emitter = BaseEmitter & {
+  addEventListener<T = any>(type: string, callback: EventListenerOrEventListenerObject<T> | null, options?: boolean | AddEventListenerOptions | undefined): void;
+}
+
 function connect(tag: string, worker: Worker) {
-  let e = new Emitter(tag, worker);
+  let e = new BaseEmitter(tag, worker) as Emitter;
   worker.addEventListener('message', e);
   return e;
 }
@@ -71,10 +85,10 @@ function subscribe(tag: string, cb: SubscriptionCallback) {
     let msg = ev.data || {};
     if(msg.spec === spec && msg.tag === tag) {
       switch(msg.stype) {
-        case MSG:
+        case MSG: {
           let emitter = idMap.get(msg.id);
           if(!emitter) {
-            emitter = new Emitter(tag, self, msg.id);
+            emitter = new BaseEmitter(tag, self, msg.id) as Emitter;
             cb(emitter);
             idMap.set(msg.id, emitter);
           }
@@ -82,11 +96,12 @@ function subscribe(tag: string, cb: SubscriptionCallback) {
             detail: msg.data
           }));
           break;
-        case DEL:
+        }
+        case DEL: {
           idMap.delete(msg.id);
           break;
+        }
       }
-
     }
   });
 }
