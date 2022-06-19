@@ -1,4 +1,4 @@
-importScripts('../../../leni.umd.js');
+import { subscribe } from '../../../lib/leni.js';
 
 function onApp(emitter) {
   emitter.addEventListener('app', function(){
@@ -6,5 +6,5 @@ function onApp(emitter) {
   });
 }
 
-leni.subscribe('app', onApp);
-leni.subscribe('app2', onApp);
+subscribe('app', onApp);
+subscribe('app2', onApp);

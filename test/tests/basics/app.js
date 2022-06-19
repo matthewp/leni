@@ -1,13 +1,13 @@
-import { connect } from '../../../leni.js';
+import { connect } from '../../../lib/leni.js';
 
 let emitter;
 
 export default function(){
-  let worker = new Worker('./tests/basics/worker.js');
+  let worker = new Worker('./tests/basics/worker.js', { type: 'module' });
   emitter = connect('app', worker);
 
   emitter.addEventListener('state', function(state) {
-    host.textContent = state.message;
+    host.textContent = state.detail.message;
   });
 
   emitter.post('say-hi', { name: 'Matthew' });

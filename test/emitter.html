@@ -15,13 +15,13 @@
   mocha.setup('bdd');
 </script>
 <script type="module">
-  import { connect } from '../leni.js';
+  import { connect } from '../lib/leni.js';
 
   const assert = chai.assert;
 
   describe('Emitter', function(){
     it('can have multiples emitters in worker', function(done){
-      let emitter = connect('app', new Worker('./tests/emitter/multi.js'));
+      let emitter = connect('app', new Worker('./tests/emitter/multi.js', { type: 'module' }));
 
       let count = 0, timeoutId = null;
 
