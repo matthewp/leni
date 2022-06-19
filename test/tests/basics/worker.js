@@ -1,17 +1,17 @@
-importScripts('../../../leni.umd.js');
+import { subscribe } from '../../../lib/leni.js';
 
 function onApp(emitter) {
-  function echo(msg){
+  function echo(ev){
     emitter.post('state', {
-      message: msg
+      message: ev.detail ?? ev
     });
   }
 
   emitter.addEventListener('message', echo)
 
-  emitter.addEventListener('say-hi', function(data){
-    echo(`Hi ${data.name}!`);
+  emitter.addEventListener('say-hi', function(ev){
+    echo(`Hi ${ev.detail.name}!`);
   });
 }
 
-leni.subscribe('app', onApp);
+subscribe('app', onApp);

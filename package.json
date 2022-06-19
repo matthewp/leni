@@ -1,9 +1,10 @@
 {
   "name": "leni",
   "version": "1.2.1",
-  "description": "",
-  "main": "leni.js",
+  "description": "Message channel between worker and window",
+  "main": "lib/leni.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,10 +15,9 @@
     "url": "https://github.com/matthewp/leni/issues"
   },
   "files": [
-    "leni.js",
-    "leni.umd.js"
+    "lib"
   ],
-  "keywords": [],
+  "keywords": ["worker"],
   "author": {
     "name": "Matthew Phillips",
     "email": "matthew@matthewphillips.info",
@@ -26,8 +26,7 @@
   "license": "BSD-2-Clause",
   "devDependencies": {
     "chai": "^4.1.2",
-    "got": "^8.0.1",
     "mocha": "^4.0.1",
-    "rollup": "^0.52.1"
+    "typescript": "^4.7.4"
   }
 }
