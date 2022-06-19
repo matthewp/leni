@@ -1,6 +1,6 @@
 {
   "name": "leni",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "Message channel between worker and window",
   "main": "lib/leni.js",
   "scripts": {
@@ -17,7 +17,9 @@
   "files": [
     "lib"
   ],
-  "keywords": ["worker"],
+  "keywords": [
+    "worker"
+  ],
   "author": {
     "name": "Matthew Phillips",
     "email": "matthew@matthewphillips.info",
