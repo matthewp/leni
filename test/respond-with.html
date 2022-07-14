@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<title>leni respondWith() tests</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.js"></script>
+
+<main>
+  <div id="mocha"></div>
+  <div id="host"></div>
+</main>
+
+<script>
+  mocha.setup('bdd');
+</script>
+<script type="module">
+  import { connect } from '../lib/leni.js';
+
+  const assert = chai.assert;
+
+  describe('respondWith()', function(){
+    let events;
+    beforeEach(function(){
+      let worker = new Worker('./tests/respond-with-worker.js', { type: 'module' });
+      events = connect('api', worker);
+    })
+
+    afterEach(function(){
+      
+    });
+
+    it('works', async function(){
+      let data = await events.postAsync('wait', 'one');
+      assert.equal(data, 'one works');
+    });
+  });
+</script>
+<script type="module">
+  mocha.run();
+</script>
