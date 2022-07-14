@@ -61,7 +61,7 @@ class BaseEmitter extends EventTarget {
     }
   }
 
-  respond(ev: MaybeAsyncEvent<any>, data: any) {
+  respond(ev: AsyncEvent<any>, data: any) {
     let eid = ev.eid;
     this.#channel.postMessage({
       spec, data, eid,
@@ -120,7 +120,7 @@ function connect(tag: string, worker: Worker) {
   return e;
 }
 
-class MaybeAsyncEvent<T> extends CustomEvent<T> {
+export class AsyncEvent<T> extends CustomEvent<T> {
   promise: null | Promise<any> = null;
   eid: string | undefined;
   respondWith<R = any>(promise: Promise<R>) {
@@ -142,7 +142,7 @@ function subscribe(tag: string, cb: SubscriptionCallback) {
             cb(emitter);
             idMap.set(msg.id, emitter);
           }
-          let ev = new MaybeAsyncEvent(msg.type, {
+          let ev = new AsyncEvent(msg.type, {
             detail: msg.data
           });
           ev.eid = msg.eid;
